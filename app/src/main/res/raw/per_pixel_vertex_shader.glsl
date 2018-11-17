@@ -2,7 +2,7 @@ uniform mat4 u_MVPMatrix;		// A constant representing the combined model/view/pr
 uniform mat4 u_MVMatrix;		// A constant representing the combined model/view matrix.       		
 		  			
 attribute vec4 a_Position;		// Per-vertex position information we will pass in.   				
-attribute vec4 a_Color;			// Per-vertex color information we will pass in. 				
+//attribute vec4 a_Color;			// Per-vertex color information we will pass in.
 attribute vec3 a_Normal;		// Per-vertex normal information we will pass in.      
 attribute vec2 a_TexCoordinate; // Per-vertex texture coordinate information we will pass in. 		
 		  
@@ -18,8 +18,9 @@ void main()
 	v_Position = vec3(u_MVMatrix * a_Position);            
 		
 	// Pass through the color.
-	v_Color = a_Color;
-	
+
+	//v_Color = vec4(min(a_Position.y*0.4,1.0),min(a_Position.y*0.4,1.0),min(a_Position.y*0.4,1.0),1);
+	v_Color = vec4(1,1,1,1);
 	// Pass through the texture coordinate.
 	v_TexCoordinate = a_TexCoordinate;                                      
 	

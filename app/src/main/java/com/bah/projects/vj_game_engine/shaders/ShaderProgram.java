@@ -8,6 +8,13 @@ import android.util.Log;
 import com.bah.projects.vj_game_engine.R;
 import com.bah.projects.vj_game_engine.common.RawResourceReader;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
+
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3f;
+
 public abstract class ShaderProgram
 {
 	private static final String TAG = "ShaderHelper";
@@ -15,6 +22,10 @@ public abstract class ShaderProgram
 	private int programID;
 	private int vertexShaderID;
 	private int fragmentShaderID;
+
+	private static int mBytesPerFloat = 4;
+
+	private static FloatBuffer matrixBuffer = ByteBuffer.allocateDirect(16*mBytesPerFloat).order(ByteOrder.nativeOrder()).asFloatBuffer();
 
 	public ShaderProgram(Context context, int vertexResourceID, int fragmentResourceID)
 	{
@@ -53,9 +64,52 @@ public abstract class ShaderProgram
 		GLES20.glDeleteProgram(programID);
 	}
 
+	protected abstract void getAllUniformLocations();
+
+	protected  void loadFloat(int location, float value)
+	{
+		GLES20.glUniform1f(location, value);
+	}
+
+	protected  void loadVector(int location, Vector3f vector)
+	{
+		GLES20.glUniform3f(location, vector.x, vector.y, vector.z);
+	}
+
+	protected  void loadBoolean(int location, boolean value)
+	{
+		float toLoad = 0;
+		if(value)
+			toLoad = 1;
+
+		GLES20.glUniform1f(location, toLoad);
+	}
+
+	protected  void loadMatrix(int location, Matrix4f matrix)
+	{
+		float[] row = new float[4];
+		for(int i = 0; i<4; i++)
+		{
+			matrix.getRow(i,row);
+			matrixBuffer.put(row);
+		}
+
+		matrixBuffer.position(0);
+
+		GLES20.glUniformMatrix3fv(location, 1, false, matrixBuffer);
+	}
+
+
+
 	public int getUniformLocationHandle(String loc)
 	{
 		int handle = GLES20.glGetUniformLocation(programID,loc);
+		return  handle;
+	}
+
+	public int getAttributeLocationHandler(String loc)
+	{
+		int handle = GLES20.glGetAttribLocation(programID,loc);
 		return  handle;
 	}
 
@@ -116,18 +170,13 @@ public abstract class ShaderProgram
 			GLES20.glAttachShader(programHandle, fragmentShaderHandle);
 			
 			// Bind attributes
+
 			bindAttributes();
-			//if (attributes != null)
-			//{
-				//final int size = attributes.length;
-				//for (int i = 0; i < size; i++)
-				//{
-				//	GLES20.glBindAttribLocation(programHandle, i, attributes[i]);
-				//}
-			//}
 			
 			// Link the two shaders together into a program.
 			GLES20.glLinkProgram(programHandle);
+
+
 
 			// Get the link status.
 			final int[] linkStatus = new int[1];

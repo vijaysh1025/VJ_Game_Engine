@@ -5,7 +5,34 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
 
-    <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ToggleButton
+            android:layout_width="117dp"
+            android:layout_height="wrap_content"
+            android:text="New ToggleButton"
+            android:id="@+id/lightToggle"
+            android:layout_gravity="center_horizontal|bottom"
+            android:textOn="Light ON"
+            android:textOff="Light OFF"
+            android:textStyle="normal" />
+
+        <Button
+            android:id="@+id/nextButton"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:text="NEXT"
+            android:layout_gravity="right|bottom" />
+
+        <Button
+            android:id="@+id/backButton"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:text="BACK"
+            android:layout_gravity="left|bottom" />
+    </FrameLayout>
 
 </RelativeLayout>

@@ -9,11 +9,17 @@ import android.view.SurfaceHolder;
  * Created by 564771 on 7/31/2016.
  */
 public class DisplayManager extends GLSurfaceView{
+
+
     private VJSurfaceRenderer mRenderer;
 
     private float mPreviousX0;
     private final float TOUCH_SCALE_FACTOR = 180.0f / 320;
 
+
+    public VJSurfaceRenderer getRenderer() {
+        return mRenderer;
+    }
     public DisplayManager(Context context) {
         super(context);
 
